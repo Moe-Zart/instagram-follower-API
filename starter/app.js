@@ -7,7 +7,7 @@ async function fetchFollowerIds() {
       resolve([...Array(NUM_OF_FOLLOWERS).keys()]);
     }, 300);
   });
-}
+} // fetched all ids
 
 // Asynchronously return fake user data based on a given ID
 async function fetchUserData(id) {
@@ -16,10 +16,33 @@ async function fetchUserData(id) {
       resolve(USERS[id % USERS.length]);
     }, 1000);
   });
-}
-
+}// fetch each user data
+/*
+<div class="profile">
+        <img class="profile__avatar" src="https://www.gravatar.com/avatar/3456?d=identicon&s=64">
+        <div class="profile__info">
+          <p class="profile__username">David Bragg</p>
+          <p class="profile__bio">Software Engineer at Canva</p>
+        </div>
+        <button class="profile__unfollow">Remove</button>
+      </div>
+*/
 // Put your code here
 // ------------------
+async function followersId(){
+  const idPromises = (await fetchFollowerIds()).map((id)=> fetchUserData(id)) 
+  const data = await Promise.all(idPromises)
+  document.querySelector(".followers").innerHTML = data.map((user)=>`<div class="profile">
+  <img class="profile__avatar" src=${user.avatar}>
+  <div class="profile__info">
+    <p class="profile__username">${user.username}</p>
+    <p class="profile__bio">${user.bio}</p>
+  </div>
+  <button class="profile__unfollow">Remove</button>
+</div>` ).join('')
+}
+followersId()
+
 
 // ------------------
 
